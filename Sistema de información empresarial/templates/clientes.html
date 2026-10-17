@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Clientes | NubeGestión{% endblock %}{% block heading %}Gestión de clientes{% endblock %}
+{% block content %}
+<div class="page-intro"><div><h1>Clientes</h1><p>Guarda los datos de contacto en un solo lugar.</p></div><a class="btn secondary" href="{{ url_for('exportar', tipo='clientes') }}">↓ Exportar respaldo CSV</a></div>
+<div class="panel"><div class="panel-heading"><div><h3>Registrar cliente</h3><p>Los campos de contacto son opcionales.</p></div></div><form method="post" class="form-grid four-fields">
+<div class="field"><label>Nombre completo *</label><input name="nombre" required placeholder="Nombre del cliente"></div>
+<div class="field"><label>DNI / documento</label><input name="documento" placeholder="Número de documento"></div>
+<div class="field"><label>Teléfono</label><input name="telefono" placeholder="Número de contacto"></div>
+<div class="field"><label>Correo</label><input type="email" name="correo" placeholder="correo@ejemplo.com"></div>
+<button class="btn primary" type="submit">＋ Guardar cliente</button></form></div>
+<div class="panel"><div class="panel-heading"><div><h3>Directorio de clientes</h3><p>{{ clientes|length }} clientes en esta consulta</p></div><form class="search-form" method="get"><input name="q" value="{{ q }}" placeholder="Buscar nombre o documento"><button class="btn secondary" type="submit">Buscar</button></form></div>
+<div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Documento</th><th>Teléfono</th><th>Correo</th><th>Registrado</th><th>Acción</th></tr></thead><tbody>
+{% for c in clientes %}<tr><td><div class="table-product"><span class="avatar client-avatar">{{ c.nombre[0]|upper }}</span><strong>{{ c.nombre }}</strong></div></td><td>{{ c.documento or '—' }}</td><td>{{ c.telefono or '—' }}</td><td>{{ c.correo or '—' }}</td><td>{{ c.creado_en.strftime('%d/%m/%Y') }}</td><td><form method="post" action="{{ url_for('eliminar_cliente', cliente_id=c.id) }}" onsubmit="return confirm('¿Eliminar este cliente?')"><button class="icon-btn danger-text" type="submit">✕</button></form></td></tr>
+{% else %}<tr><td colspan="6" class="empty-cell">No se encontraron clientes.</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

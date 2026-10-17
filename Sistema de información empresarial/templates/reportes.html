@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Reportes | NubeGestión{% endblock %}{% block heading %}Reportes del negocio{% endblock %}
+{% block content %}
+<div class="page-intro"><div><h1>Reportes</h1><p>Información resumida para apoyar las decisiones de la empresa.</p></div><a class="btn secondary" href="{{ url_for('exportar', tipo='ventas') }}">↓ Descargar ventas CSV</a></div>
+<div class="stat-grid three-stats">
+<div class="stat-card"><div class="stat-top"><span>Ingresos por ventas</span><span class="stat-icon purple">S/</span></div><div class="stat-value">S/ {{ '%.2f'|format(ingresos) }}</div><div class="stat-foot">Suma de ventas registradas</div></div>
+<div class="stat-card"><div class="stat-top"><span>Valor del inventario</span><span class="stat-icon blue">▤</span></div><div class="stat-value">S/ {{ '%.2f'|format(productos_valorizados) }}</div><div class="stat-foot">Precio por cantidad en stock</div></div>
+<div class="stat-card"><div class="stat-top"><span>Operaciones</span><span class="stat-icon green">↗</span></div><div class="stat-value">{{ ventas|length }}</div><div class="stat-foot">Ventas mostradas en el historial</div></div>
+</div>
+<div class="panel"><div class="panel-heading"><div><h3>Historial para análisis</h3><p>Las ventas se registran en una base de datos estructurada.</p></div></div><div class="table-wrap"><table><thead><tr><th>N.º</th><th>Fecha</th><th>Cliente</th><th>Productos</th><th>Total</th></tr></thead><tbody>
+{% for v in ventas %}<tr><td>#{{ v.id }}</td><td>{{ v.fecha.strftime('%d/%m/%Y %H:%M') }}</td><td>{{ v.cliente.nombre if v.cliente else 'Venta general' }}</td><td>{% for d in v.detalles %}{{ d.producto.nombre }} ({{ d.cantidad }}){% if not loop.last %}, {% endif %}{% endfor %}</td><td class="money">S/ {{ '%.2f'|format(v.total) }}</td></tr>
+{% else %}<tr><td colspan="5" class="empty-cell">No hay datos para mostrar. Registra una venta primero.</td></tr>{% endfor %}
+</tbody></table></div></div>
+<div class="info-banner"><div class="banner-icon">▥</div><div><strong>¿Para qué sirven estos reportes?</strong><p>Ayudan a revisar los ingresos, conocer el valor aproximado del inventario y detectar qué información necesita atención.</p></div></div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Productos | NubeGestión{% endblock %}{% block heading %}Productos e inventario{% endblock %}
+{% block content %}
+<div class="page-intro"><div><h1>Productos e inventario</h1><p>Controla las existencias y evita quedarte sin productos.</p></div><a class="btn secondary" href="{{ url_for('exportar', tipo='productos') }}">↓ Exportar respaldo CSV</a></div>
+<div class="two-col">
+  <div class="panel"><div class="panel-heading"><div><h3>Registrar producto</h3><p>Completa los datos del artículo</p></div></div>
+  <form method="post" class="form-grid">
+    <div class="field full-field"><label>Nombre del producto *</label><input name="nombre" required maxlength="120" placeholder="Ej. Teclado inalámbrico"></div>
+    <div class="field"><label>Categoría</label><input name="categoria" placeholder="Ej. Tecnología"></div>
+    <div class="field"><label>Precio (S/)</label><input type="number" name="precio" min="0" step="0.01" required value="0"></div>
+    <div class="field"><label>Stock inicial</label><input type="number" name="stock" min="0" required value="0"></div>
+    <div class="field"><label>Stock mínimo</label><input type="number" name="stock_minimo" min="0" required value="5"></div>
+    <button class="btn primary full-field" type="submit">＋ Guardar producto</button>
+  </form></div>
+  <div class="panel tips-panel"><div class="tips-icon">◎</div><h3>Control de inventario</h3><p>El stock se actualiza automáticamente al registrar una venta.</p><div class="tip-row"><span class="status-dot red"></span><span><strong>Stock bajo</strong><small>Cuando la cantidad es igual o menor al mínimo definido.</small></span></div><div class="tip-row"><span class="status-dot green"></span><span><strong>Registro centralizado</strong><small>Todos los módulos consultan la misma base de datos.</small></span></div></div>
+</div>
+<div class="panel"><div class="panel-heading"><div><h3>Inventario registrado</h3><p>{{ productos|length }} productos en esta consulta</p></div><form class="search-form" method="get"><input name="q" value="{{ q }}" placeholder="Buscar producto..."><button class="btn secondary" type="submit">Buscar</button></form></div>
+<div class="table-wrap"><table><thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acción</th></tr></thead><tbody>
+{% for p in productos %}<tr><td><div class="table-product"><span class="product-mini">{{ p.nombre[0]|upper }}</span><strong>{{ p.nombre }}</strong></div></td><td>{{ p.categoria }}</td><td>S/ {{ '%.2f'|format(p.precio) }}</td><td>{{ p.stock }}</td><td>{% if p.stock == 0 %}<span class="status danger">Agotado</span>{% elif p.stock <= p.stock_minimo %}<span class="status warning">Stock bajo</span>{% else %}<span class="status success">Disponible</span>{% endif %}</td><td><form method="post" action="{{ url_for('eliminar_producto', producto_id=p.id) }}" onsubmit="return confirm('¿Eliminar este producto?')"><button class="icon-btn danger-text" title="Eliminar" type="submit">✕</button></form></td></tr>
+{% else %}<tr><td colspan="6" class="empty-cell">No se encontraron productos.</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

@@ -21,4 +21,4 @@ services:
       - key: ADMIN_USER
         value: admin
       - key: ADMIN_PASSWORD
-        sync: Admin123!
+        value: "Admin123!"

@@ -1,4 +1,0 @@
-{% extends "base.html" %}
-{% block title %}Error {{ codigo }} | NubeGestión{% endblock %}
-{% block heading %}Aviso del sistema{% endblock %}
-{% block content %}<div class="panel error-page"><div class="error-number">{{ codigo }}</div><h1>Algo no salió como esperábamos</h1><p>{{ mensaje }}</p><a class="btn primary" href="{{ url_for('inicio') }}">Volver al panel</a></div>{% endblock %}
